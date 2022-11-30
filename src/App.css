@@ -1,38 +1,58 @@
-.App {
-  text-align: center;
-}
+import React, { Component } from 'react'; 
+import Overview from "./components/Overview"; 
+import uniqid from "uniqid";
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+class App extends Component{ 
+  constructor(){
+    super(); 
+// Define state 
+    this.state = { 
+      task: {text: '', id: uniqid(), number:1},
+      tasks: [], 
+    };
+  }
+
+// JS code
+    handleChange = (e) => { 
+      this.setState({
+        task: { 
+          text: e.target.value, id: this.state.task.id, number: this.state.task.number
+        }
+      }); 
+    };
+
+    onSubmitTask = (e) => { 
+      e.preventDefault(); 
+      this.setState({ 
+        tasks: this.state.tasks.concat(this.state.task),
+        task: {text: '', id: uniqid(), number: this.state.task.number+1 }, 
+      }); 
+    }; 
+
+    deleteTask = (e) => { 
+      e.preventDefault(); 
+      this.setState({ 
+        tasks: this.state.tasks.filter(this.state.task),
+      }); 
+    }; 
+    // 
+  
+  render() {
+    const {task, tasks} = this.state; 
+
+    return (
+      <div>
+        <form onSubmit={this.onSubmitTask}>
+          <label htmlFor="taskInput">Enter task label </label> 
+          <input onChange={this.handleChange} value={task.text} type ="text" id ="taskInput"/> /
+          <button type="submit"> Add Task Button </button>
+        </form>
+          <Overview tasks={tasks}  />         
+        
+       </div>
+    ); 
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+export default App;
